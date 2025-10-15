@@ -1,0 +1,7 @@
+app_exporter:
+    resource: "export/_main.yaml"
+    prefix: /export
+
+app_importer:
+    resource: "import/_main.yaml"
+    prefix: /import

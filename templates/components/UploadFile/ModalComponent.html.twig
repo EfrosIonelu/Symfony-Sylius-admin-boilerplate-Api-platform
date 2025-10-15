@@ -1,0 +1,119 @@
+<div {{ attributes }}>
+    <div class="modal fade" id="uploadFileModal" tabindex="-1" aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadFileModalLabel">
+                        {{ ux_icon('material-symbols:upload') }}
+                        Upload File
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                {{ form_start(form, {
+                    'attr': {
+                        'data-action': 'live#action:prevent',
+                        'data-live-action-param': "upload",
+                        'data-model': '*'
+                    }
+                }) }}
+
+                <div class="modal-body">
+                    {% if errorMessage %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="icon exclamation triangle"></i>
+                            {{ errorMessage }}
+                        </div>
+                    {% endif %}
+
+                    {% if successMessage %}
+                        <div class="alert alert-success" role="alert">
+                            <i class="icon check circle"></i>
+                            {{ successMessage }}
+                        </div>
+                    {% endif %}
+
+                    {% if isUploading %}
+                        <div class="text-center mb-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Uploading...</span>
+                            </div>
+                            <p class="mt-2">Uploading file, please wait...</p>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            {{ form_row(form.file, {
+                                'attr': {
+                                    'accept': 'image/*,.pdf,.doc,.docx',
+                                    'class': 'form-control',
+                                    'data-live-ignore': 'true'
+                                }
+                            }) }}
+                        </div>
+
+                        <div class="text-muted small">
+                            <i class="icon info circle"></i>
+                            Supported formats: JPEG, PNG, PDF, DOC(max 10MB)
+                        </div>
+                    {% endif %}
+
+                    {{ form_row(form.type, {
+                        'attr': {
+                            'class': 'form-control',
+                        }
+                    }) }}
+                </div>
+
+                <div class="modal-footer">
+                    {% if not isUploading %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-action="live#action" data-live-action-param="close">
+                            Cancel
+                        </button>
+
+                        {% if not successMessage %}
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-action="live#action"
+                                    data-live-action-param="files|upload">
+                                <i class="icon upload"></i>
+                                Upload File
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" data-action="live#action" data-live-action-param="close">
+                                <i class="icon check"></i>
+                                Done
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('uploadFileModal');
+            const modalInstance = new bootstrap.Modal(modal);
+
+            // Listen for upload success event to refresh page
+            window.addEventListener('upload:success', (event) => {
+                setTimeout(() => {
+                    modalInstance.hide();
+                    // Refresh the page after successful upload
+                    window.location.reload();
+                }, 2000); // Wait 2 seconds to show success message
+            });
+
+            // Reset form when modal is hidden
+            modal.addEventListener('hidden.bs.modal', () => {
+                // Dispatch close action to reset component state
+                const closeEvent = new CustomEvent('live:action', {
+                    detail: { action: 'close' }
+                });
+                modal.dispatchEvent(closeEvent);
+            });
+        });
+    </script>
+</div>

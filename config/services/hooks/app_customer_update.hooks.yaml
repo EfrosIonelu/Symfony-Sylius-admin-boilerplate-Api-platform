@@ -1,0 +1,7 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.app_customer.update.content':
+            form:
+                template: '/admin/app_customer/edit.html.twig'
+                priority: 0
+

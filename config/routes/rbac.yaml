@@ -1,0 +1,37 @@
+sylius_rbac_admin_administration_role_create_view:
+    path: /app-administration-roles/new
+    methods: [GET]
+    defaults:
+        _controller: Odiseo\SyliusRbacPlugin\Action\CreateAdministrationRoleViewAction
+
+sylius_rbac_admin_administration_role_create:
+    path: /app-administration-roles/new
+    methods: [PUT, PATCH, POST]
+    defaults:
+        _controller: Odiseo\SyliusRbacPlugin\Action\CreateAdministrationRoleAction
+
+sylius_rbac_admin_administration_role_update_view:
+    path: /app-administration-roles/{id}/update
+    methods: [GET]
+    defaults:
+        _controller: Odiseo\SyliusRbacPlugin\Action\UpdateAdministrationRoleViewAction
+
+sylius_rbac_admin_administration_role_update:
+    path: /app-administration-roles/{id}/update
+    methods: [POST]
+    defaults:
+        _controller: Odiseo\SyliusRbacPlugin\Action\UpdateAdministrationRoleAction
+
+app_admin_app_administration_role_bulk_delete:
+    path: /app-administration-roles/bulk-delete
+    methods: [POST]
+    defaults:
+        _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+        route: sylius_admin_ui_dashboard
+
+app_admin_app_administration_role_delete:
+    path: /app-administration-roles/role-delete
+    methods: [ POST ]
+    defaults:
+        _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+        route: sylius_admin_ui_dashboard

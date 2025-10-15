@@ -1,0 +1,13 @@
+<div {{ attributes }}>
+    <p>{{ number }}</p>
+
+    <button
+        type="button"
+        class="btn btn-secondary"
+        data-action="live#action"
+        data-live-action-param="increment"
+        data-live-current-number-param="{{ number }}"
+    >
+        Increment
+    </button>
+</div>

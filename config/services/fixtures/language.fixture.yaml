@@ -1,0 +1,13 @@
+sylius_fixtures:
+    suites:
+        add_default_language:
+            fixtures:
+                app_language:
+                    options:
+                        custom:
+                            - name: "English"
+                              locale: "en"
+                              enabled: true
+                            - name: "Romanian"
+                              locale: "ro"
+                              enabled: true

@@ -1,0 +1,59 @@
+{% macro headers(grid, definition, component) %}
+    {% if definition.actionGroups.bulk is defined and definition.getEnabledActions('bulk')|length > 0 %}
+        <th class="w-1 {{ field.options.vars.th_class|default('') }}">
+            <input data-check-all="index" type="checkbox" class="form-check-input">
+        </th>
+    {% endif %}
+
+    {% for field in definition.fields|sylius_sort_by('position') %}
+        {% if field.enabled %}
+            {% if field.isSortable %}
+                {{ _self.sortable_header(field, component) }}
+            {% else %}
+                <th class="text-body sylius-table-column-{{ field.name }} {{ field.options.vars.th_class|default('') }}">
+                    {{ field.label|trans }}
+                </th>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% if definition.actionGroups.item is defined and definition.getEnabledActions('item')|length > 0 %}
+        <th class="w-1 text-body text-center sylius-table-column-actions {{ field.options.vars.th_class|default('') }}">
+            {{ 'sylius.ui.actions'|trans }}
+        </th>
+    {% endif %}
+{% endmacro %}
+
+{% macro sortable_header(field, component) %}
+    {% set current_direction = component.getSortingDirection(field.name) %}
+    {% set is_sorted = component.isSortedBy(field.name) %}
+    {% set next_direction = is_sorted and current_direction == 'asc' ? 'desc' : 'asc' %}
+
+    <th class="sortable {{ is_sorted ? 'sorted ' ~ (current_direction == 'desc' ? 'descending' : 'ascending') : '' }} sylius-table-column-{{ field.name }} {{ field.options.vars.th_class|default('') }}">
+        <button type="button" class="btn btn-link text-body link-reset p-0 text-decoration-none"
+                data-action="live#action"
+                data-live-action-param="toggleSort"
+                data-live-field-param="{{ field.name }}"
+                style="font-weight: inherit;">
+            {{ field.label|trans }}
+
+            <span style="width: 12px; height: 100%">
+                {% if is_sorted %}
+                    {% if current_direction == 'desc' %}
+                        <svg style="transform: translateY(-1px)" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    {% else %}
+                        <svg style="transform: translateY(-1px)" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+                        </svg>
+                    {% endif %}
+                {% else %}
+                    <svg style="opacity: 0.7; transform: translateY(-1px)" xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-chevron-expand" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708"></path>
+                    </svg>
+                {% endif %}
+            </span>
+        </button>
+    </th>
+{% endmacro %}

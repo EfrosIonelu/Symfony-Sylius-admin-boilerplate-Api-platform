@@ -1,0 +1,235 @@
+{% set form = hookable_metadata.context.form %}
+
+{% form_theme form '@SyliusBootstrapAdminUi/shared/form_theme.html.twig' 'admin/custom_form/form_theme.html.twig' %}
+
+<div class="container-xl mt-3">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <div id="side-nav" class="sticky-md-top" style="top: 1rem;">
+                <div class="list-group bg-white mb-5" role="tablist">
+                    <button type="button" class="list-group-item list-group-item-action active" data-bs-toggle="tab"
+                            data-bs-target="#general" role="tab" aria-selected="true">
+                        {{ 'app.ui.general'|trans }}
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action " data-bs-toggle="tab"
+                            data-bs-target="#translations" role="tab" aria-selected="false" tabindex="-1">
+                        {{ 'app.ui.translations'|trans }}
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action " data-bs-toggle="tab"
+                            data-bs-target="#fields" role="tab" aria-selected="false" tabindex="-1">
+                        {{ 'app.ui.fields'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <div class="tab-content" id="translationTabsContent">
+                <!-- General Tab -->
+                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-cog me-2"></i>
+                                {{ 'app.ui.general_information'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {{ form_row(form.enabled) }}
+                            {{ form_row(form.code) }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translations Tab -->
+                <div class="tab-pane fade" id="translations" role="tabpanel" aria-labelledby="translations-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-language me-2"></i>
+                                {{ 'app.ui.translations'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Accordion for each language -->
+                            <div class="accordion" id="languageAccordion">
+                                {% for locale, translation_form in form.translations %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading-{{ locale }}">
+                                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ locale }}"
+                                                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                                                    aria-controls="collapse-{{ locale }}">
+                                                <i class="fas fa-language me-2"></i>
+                                                {{ locale|upper }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-{{ locale }}"
+                                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                                             aria-labelledby="heading-{{ locale }}" data-bs-parent="#languageAccordion">
+                                            <div class="accordion-body">
+                                                {{ form_row(translation_form.name, {
+                                                    'label': ('app.ui.name'|trans) ~ ' (' ~ (locale|upper) ~ ')',
+                                                    'attr': {
+                                                        'class': 'form-control',
+                                                        'placeholder': ('app.ui.enter_page_name'|trans) ~ ' ' ~ (locale|upper)
+                                                    }
+                                                }) }}
+
+                                                <!-- Hidden locale field -->
+                                                {{ form_rest(translation_form) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fields Tab -->
+                <div class="tab-pane fade" id="fields" role="tabpanel" aria-labelledby="fields-tab">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-list me-2"></i>
+                                {{ 'app.ui.fields'|trans }}
+                            </h5>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFieldModal">
+                                <i class="fas fa-plus me-1"></i>
+                                {{ 'app.ui.add_field'|trans }}
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            {{ form_row(form.fields) }}
+
+                            {% if form.fields|length == 0 %}
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-list fa-3x mb-3"></i>
+                                    <p>{{ 'app.ui.no_fields_yet'|trans }}</p>
+                                    <p class="small">{{ 'app.ui.click_add_field_to_start'|trans }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form) }}
+        {{ form_end(form, {render_rest: false}) }}
+    </div>
+</div>
+
+<!-- Add Field Modal -->
+<div class="modal fade" id="addFieldModal" tabindex="-1" aria-labelledby="addFieldModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFieldModalLabel">{{ 'app.ui.add_new_field'|trans }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'app.ui.close'|trans }}"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ 'app.ui.field_will_be_added'|trans }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'app.ui.cancel'|trans }}</button>
+                <button type="button" class="btn btn-primary" id="addFieldBtn">{{ 'app.ui.add_field'|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const collection = document.getElementById('custom-form-fields-collection') || document.querySelector('.fields-collection');
+    const addFieldBtn = document.getElementById('addFieldBtn');
+    const addFieldModal = new bootstrap.Modal(document.getElementById('addFieldModal'));
+
+    if (!collection) {
+        console.warn('Fields collection container not found');
+        return;
+    }
+
+    let fieldIndex = collection.children.length;
+
+    // Add field functionality
+    addFieldBtn.addEventListener('click', function() {
+        const prototype = collection.dataset.prototype;
+        const newFieldHtml = prototype.replace(/__field_item_name__/g, fieldIndex);
+
+        // Create a temporary div to hold the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newFieldHtml;
+
+        // Get the actual field widget element
+        const fieldWidget = tempDiv.firstElementChild;
+        if (fieldWidget) {
+            collection.appendChild(fieldWidget);
+            fieldIndex++;
+
+            // Initialize new field events
+            initializeFieldEvents(fieldWidget);
+        }
+
+        addFieldModal.hide();
+    });
+
+    // Remove field functionality
+    function initializeFieldEvents(fieldWrapper) {
+        const removeBtn = fieldWrapper.querySelector('.remove-field');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function() {
+                if (confirm('{{ 'app.ui.confirm_remove_field'|trans }}')) {
+                    fieldWrapper.remove();
+                }
+            });
+        }
+    }
+
+    // Initialize existing fields (both .field-item and .custom-form-field-widget)
+    collection.querySelectorAll('.field-item, .custom-form-field-widget').forEach(function(fieldWrapper) {
+        initializeFieldEvents(fieldWrapper);
+    });
+
+    // Handle collection prototype for allowedValues
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.add-collection-item') || e.target.closest('.add-collection-item')) {
+            e.preventDefault();
+            const button = e.target.closest('.add-collection-item') || e.target;
+            const collection = button.closest('.collection-container');
+            if (collection) {
+                addCollectionItem(collection);
+            }
+        }
+
+        if (e.target.matches('.remove-collection-item') || e.target.closest('.remove-collection-item')) {
+            e.preventDefault();
+            const button = e.target.closest('.remove-collection-item') || e.target;
+            const item = button.closest('.collection-item');
+            if (item && confirm('{{ 'app.ui.confirm_remove_item'|trans }}')) {
+                item.remove();
+            }
+        }
+    });
+
+    function addCollectionItem(collection) {
+        const prototype = collection.dataset.prototype;
+        const index = collection.querySelectorAll('.collection-item').length;
+        const newItemHtml = prototype.replace(/__allowed_value_name__/g, index);
+
+        // Create a temporary div to hold the HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newItemHtml;
+
+        // Get the actual item element (should already have collection-item structure)
+        const itemElement = tempDiv.firstElementChild;
+        if (itemElement) {
+            const itemsContainer = collection.querySelector('.collection-items');
+            if (itemsContainer) {
+                itemsContainer.appendChild(itemElement);
+            }
+        }
+    }
+});
+</script>

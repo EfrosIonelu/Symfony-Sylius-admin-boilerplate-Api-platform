@@ -1,0 +1,81 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Form\Type\:
+        resource: '../../src/Form/Type'
+
+    App\Form\Type\Translation\TranslationType:
+        arguments:
+            - '%app.model.translation.class%'
+            - ['app_translation:edit']
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\Translation\TranslationTranslationType:
+        arguments:
+            - 'App\Entity\Cms\TranslationTranslation'
+            - ['app_translation:edit']
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\Page\PageType:
+        arguments:
+            - 'App\Entity\Cms\Page'
+            - [ 'app_page:edit' ]
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\Page\PageTranslationType:
+        arguments:
+            - 'App\Entity\Cms\PageTranslation'
+            - [ 'app_page:edit' ]
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\Cms\ConfigType:
+        arguments:
+            - 'App\Entity\Cms\Config'
+            - [ 'app_config:edit' ]
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\User\AppCustomerType:
+        arguments:
+            - '%app.model.app_customer.class%'
+            - [ 'app_customer:edit' ]
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\User\AppUserType:
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\CustomForm\CustomFormType:
+        arguments:
+            - 'App\Entity\CustomForm\CustomForm'
+            - ['app_custom_form:edit']
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\CustomForm\CustomFormTranslationType:
+        arguments:
+            - 'App\Entity\CustomForm\CustomFormTranslation'
+            - ['app_custom_form:edit']
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\CustomForm\CustomFormFieldType:
+        arguments:
+            - 'App\Entity\CustomForm\CustomFormField'
+            - ['app_custom_form_field:edit']
+        tags:
+            - { name: form.type }
+
+    App\Form\Type\CustomForm\CustomFormFieldTranslationType:
+        arguments:
+            - 'App\Entity\CustomForm\CustomFormFieldTranslation'
+            - ['app_custom_form_field_translation:edit']
+        tags:
+            - { name: form.type }

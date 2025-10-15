@@ -1,0 +1,75 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    locale: 'en'
+    sylius_core.public_dir: '%kernel.project_dir%/public'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Factory/'
+            - '../src/Fixture/'
+            - '../src/Form/'
+            - '../src/Context'
+            - '../src/Component'
+            - '../src/Importer'
+            - '../src/Exporter'
+            - '../src/MessageHandler'
+            - '../src/Services'
+            - '../src/Serializer'
+            - '../src/State'
+
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: [ 'controller.service_arguments' ]
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    sylius_rbac.repository.administration_role:
+        class: App\Repository\User\AppAdministrationRoleRepository
+        factory: [ '@doctrine.orm.entity_manager', 'getRepository' ]
+        arguments: [ 'App\Entity\User\AppAdministrationRole' ]
+
+    sylius.uploader.image:
+        class: App\Services\ImageUploader
+        public: true
+
+    App\Twig\MediaExtension:
+        arguments:
+            $filterConfig: '@liip_imagine.filter.configuration'
+
+    App\Twig\GridExtension:
+        arguments:
+            $gridProvider: '@sylius.grid.service_grid_provider'
+
+    App\Access\Checker\AppRouteNameChecker:
+        decorates: 'Odiseo\SyliusRbacPlugin\Access\Checker\RouteNameCheckerInterface'
+        arguments:
+            $decoratedChecker: '@.inner'
+
+imports:
+    - { resource: services/factory.yaml }
+    - { resource: services/fixtures.yaml }
+    - { resource: services/form.yaml }
+    - { resource: services/context.yaml }
+    - { resource: services/component.yaml }
+    - { resource: services/exporter/ }
+    - { resource: services/importer/ }
+    - { resource: services/message_handler.yaml }
+    - { resource: services/services.yaml }
+    - { resource: services/serializer.yaml }
+    - { resource: services/states.yaml }

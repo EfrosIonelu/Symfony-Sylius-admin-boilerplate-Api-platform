@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Serializer\:
+        resource: '../../src/Serializer'
+
+    App\Serializer\ExceptionNormalizer:
+        arguments:
+            - '%kernel.debug%'
+        autoconfigure: true
+        autowire: true
+
+    App\Serializer\ConstraintViolationNormalizer:
+        arguments:
+            - '%kernel.debug%'
+        autoconfigure: true
+        autowire: true

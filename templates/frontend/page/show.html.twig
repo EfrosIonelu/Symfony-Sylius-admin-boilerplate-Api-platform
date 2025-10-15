@@ -1,0 +1,22 @@
+
+{% extends 'frontend/layout.html.twig' %}
+{% import 'shared/macro/custom_form.html.twig' as customForm %}
+
+{% block title %}{{ page.name }}{% endblock %}
+
+{% block body %}
+    <div class="page-content">
+        <h1>{{ page.name }}</h1>
+        <div class="content">
+            {{ page.content|monsieurbiz_richeditor_render_field }}
+        </div>
+
+        {# Example: render custom form with code 'first_form' #}
+        {{ customForm.render_custom_form('first_form') }}
+    </div>
+{% endblock %}
+
+{% block javascripts_body %}
+    {{ parent() }}
+    <script src="{{ asset('js/custom_form_submit.js') }}"></script>
+{% endblock %}

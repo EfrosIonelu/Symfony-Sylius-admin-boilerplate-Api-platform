@@ -1,0 +1,7 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.page.update.content':
+            form:
+                template: '/admin/page/edit.html.twig'
+                priority: 0
+

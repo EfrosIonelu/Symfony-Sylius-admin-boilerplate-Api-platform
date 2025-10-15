@@ -1,0 +1,172 @@
+{% macro field_attributes(field) %}
+    {% if field.required %}required{% endif %}
+    {% if field.attributes %}
+        {% for attr, value in field.attributes %}
+            {% if attr != 'data-col' %}{{ attr }}="{{ value }}"{% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro get_col_class(field) %}
+    {% set colSize = 6 %}
+    {% if field.attributes and field.attributes['data-col'] is defined %}
+        {% set colSize = field.attributes['data-col'] %}
+    {% endif %}
+    col-12 col-md-{{ colSize }}
+{% endmacro %}
+
+{% macro field_label(field, fieldId) %}
+    <label for="{{ fieldId }}" class="form-label">
+        {{ field.label }}
+        {% if field.required %}<span class="text-danger">*</span>{% endif %}
+    </label>
+{% endmacro %}
+
+{% macro render_text_field(field) %}
+    {{ _self.field_label(field, 'field_' ~ field.id) }}
+    <input
+        type="text"
+        id="field_{{ field.id }}"
+        name="fields[{{ field.id }}]"
+        class="form-control"
+        {{ _self.field_attributes(field) }}
+    >
+{% endmacro %}
+
+{% macro render_textarea_field(field) %}
+    {{ _self.field_label(field, 'field_' ~ field.id) }}
+    <textarea
+        id="field_{{ field.id }}"
+        name="fields[{{ field.id }}]"
+        class="form-control"
+        {{ _self.field_attributes(field) }}
+    ></textarea>
+{% endmacro %}
+
+{% macro render_date_field(field) %}
+    {{ _self.field_label(field, 'field_' ~ field.id) }}
+    <input
+        type="date"
+        id="field_{{ field.id }}"
+        name="fields[{{ field.id }}]"
+        class="form-control"
+        {{ _self.field_attributes(field) }}
+    >
+{% endmacro %}
+
+{% macro render_select_field(field) %}
+    {{ _self.field_label(field, 'field_' ~ field.id) }}
+    <select
+        id="field_{{ field.id }}"
+        name="fields[{{ field.id }}]"
+        class="form-select"
+        {{ _self.field_attributes(field) }}
+    >
+        <option value="">{{ 'app.ui.select_option'|trans }}</option>
+        {% if field.allowedValues %}
+            {% for value in field.allowedValues %}
+                <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+        {% endif %}
+    </select>
+{% endmacro %}
+
+{% macro render_checkbox_field(field) %}
+    <fieldset>
+        <legend class="form-label">
+            {{ field.label }}
+            {% if field.required %}<span class="text-danger">*</span>{% endif %}
+        </legend>
+        {% if field.allowedValues %}
+            {% for value in field.allowedValues %}
+                <div class="form-check">
+                    <input
+                        type="checkbox"
+                        id="field_{{ field.id }}_{{ loop.index }}"
+                        name="fields[{{ field.id }}][]"
+                        class="form-check-input"
+                        value="{{ value }}"
+                        {{ _self.field_attributes(field) }}
+                    >
+                    <label for="field_{{ field.id }}_{{ loop.index }}" class="form-check-label">
+                        {{ value }}
+                    </label>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    id="field_{{ field.id }}"
+                    name="fields[{{ field.id }}]"
+                    class="form-check-input"
+                    value="1"
+                    {{ _self.field_attributes(field) }}
+                >
+                <label for="field_{{ field.id }}" class="form-check-label">
+                    {{ field.label }}
+                </label>
+            </div>
+        {% endif %}
+    </fieldset>
+{% endmacro %}
+
+{% macro render_radio_field(field) %}
+    <fieldset>
+        <legend class="form-label">
+            {{ field.label }}
+            {% if field.required %}<span class="text-danger">*</span>{% endif %}
+        </legend>
+        {% if field.allowedValues %}
+            {% for value in field.allowedValues %}
+                <div class="form-check">
+                    <input
+                        type="radio"
+                        id="field_{{ field.id }}_{{ loop.index }}"
+                        name="fields[{{ field.id }}]"
+                        class="form-check-input"
+                        value="{{ value }}"
+                        {{ _self.field_attributes(field) }}
+                    >
+                    <label for="field_{{ field.id }}_{{ loop.index }}" class="form-check-label">
+                        {{ value }}
+                    </label>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </fieldset>
+{% endmacro %}
+
+{% macro render_custom_form(code) %}
+    {% set customForm = get_custom_form_by_code(code) %}
+
+    {% if customForm is not null %}
+    <form class="custom-form" data-custom-form-code="{{ customForm.code }}" method="post">
+        <h2>{{ customForm.name }}</h2>
+
+        <div class="row">
+            {% for field in customForm.fields|sort((a, b) => a.order <=> b.order) %}
+                <div class="{{ _self.get_col_class(field) }} mb-3">
+                    {% if field.fieldType == 'text' %}
+                        {{ _self.render_text_field(field) }}
+                    {% elseif field.fieldType == 'textarea' %}
+                        {{ _self.render_textarea_field(field) }}
+                    {% elseif field.fieldType == 'date' %}
+                        {{ _self.render_date_field(field) }}
+                    {% elseif field.fieldType == 'select' %}
+                        {{ _self.render_select_field(field) }}
+                    {% elseif field.fieldType == 'checkbox' %}
+                        {{ _self.render_checkbox_field(field) }}
+                    {% elseif field.fieldType == 'radio' %}
+                        {{ _self.render_radio_field(field) }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">{{ 'app.ui.submit'|trans }}</button>
+        </div>
+    </form>
+    {% endif %}
+{% endmacro %}

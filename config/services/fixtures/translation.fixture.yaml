@@ -1,0 +1,11 @@
+sylius_fixtures:
+    suites:
+        add_default_translations:
+            fixtures:
+                app_translation:
+                    options:
+                        custom:
+                            - key: "app.welcome.message"
+                              translations:
+                                  en: "Welcome to the app"
+                                  ro: "Salut pe aplicația noastră"

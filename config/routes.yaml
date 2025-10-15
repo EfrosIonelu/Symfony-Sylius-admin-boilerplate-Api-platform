@@ -1,0 +1,10 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+odiseo_sylius_rbac_admin:
+    resource: "./routes/rbac.yaml"
+    prefix: "/%app_admin.path_name%"
+

@@ -1,0 +1,6 @@
+{# We can not render component grid bulk actions because of #}
+{# vendor/sylius/resource-bundle/src/Bundle/Grid/Renderer/TwigBulkActionGridRenderer.php #}
+{# Assert::isInstanceOf($gridView, ResourceGridView::class); #}
+{% hook ['sylius_admin.custom.index.content.grid', 'sylius_admin.common.index.content.grid'] with {
+    resources: grid,
+} %}

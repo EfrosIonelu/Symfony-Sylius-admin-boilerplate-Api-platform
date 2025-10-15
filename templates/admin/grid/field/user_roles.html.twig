@@ -1,0 +1,5 @@
+{% if data.user %}
+    {{ data.user.roles|join(', ') }}
+{% else %}
+    -
+{% endif %}

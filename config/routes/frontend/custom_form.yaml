@@ -1,0 +1,7 @@
+app_frontend_custom_form_submit:
+    path: /custom-form/submit
+    defaults:
+        _controller: App\Controller\Backend\CustomFormSubmissionController::submitAction
+    methods: [POST]
+    options:
+        expose: true

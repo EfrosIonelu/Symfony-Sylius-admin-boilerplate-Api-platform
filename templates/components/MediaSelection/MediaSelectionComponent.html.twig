@@ -1,0 +1,300 @@
+{% import 'shared/macro/media_macro.html.twig' as media_macro %}
+
+
+<div {{ attributes.defaults({
+    'data-controller': 'media-selection',
+    'data-media-selection-zone-value': zone
+}) }}>
+    <!-- Media Selection Summary -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="mb-0">Selected Media Files for ({{ zone }} zone)</h6>
+                    <small class="text-muted">{{ selectedMediaIds|length }} file(s) selected</small>
+                </div>
+                <button type="button"
+                        class="btn btn-primary btn-sm"
+                        data-action="live#action"
+                        data-live-action-param="openModal">
+                    <i class="fas fa-images me-1"></i>
+                    Select Media
+                </button>
+            </div>
+
+            {% if selectedMediaIds is not empty %}
+                <div class="mt-3">
+                    <div class="row g-2">
+                        {% for media in this.selectedMedia %}
+                            <div class="col-auto">
+                                <div class="card image_card position-relative" style="width: 80px;">
+                                    <!-- Remove button -->
+                                    <div style="position: absolute; width: 20px; height: 20px; top: 2px; right: 2px;">
+                                        <button type="button"
+                                                class="btn btn-link btn-sm position-absolute top-0 end-0 rounded-circle p-1"
+                                                style="width: 20px; height: 20px; font-size: 10px; z-index: 10; transform: translate(25%, -25%);"
+                                                data-action="live#action"
+                                                data-live-action-param="toggleMedia"
+                                                data-live-media-id-param="{{ media.id }}"
+                                                title="Remove media">
+                                            {{ ux_icon('material-symbols:close') }}
+                                        </button>
+                                    </div>
+
+                                    {% if media.mimeType starts with 'image/' %}
+                                        {% if media %}
+                                            {{ media_macro.display_media(media, 'avatar', '80px') }}
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 60px;">
+                                            <i class="fas fa-file fa-lg text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body p-1">
+                                        <small class="text-truncate d-block">{{ media.originalName|slice(0, 10) }}...</small>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    {% if isModalOpen %}
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);"
+             onclick="this.querySelector('[data-live-action-param=closeModal]').click()">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content" style="min-width: 900px; margin-top:50px" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-images me-2"></i>
+                            Select Media Files
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-action="live#action"
+                                data-live-action-param="closeModal">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Search Input -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        {{ ux_icon('material-symbols:search') }}
+                                    </span>
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Search by filename..."
+                                           data-model="debounce(400)|searchTerm"
+{#                                           data-action="live#action"#}
+                                           value="{{ searchTerm }}"
+{#                                           data-live-action-param="search"#}
+                                    >
+                                    {% if searchTerm %}
+                                        <button class="btn btn-outline-secondary"
+                                                type="button"
+                                                data-action="live#action"
+                                                data-live-action-param="clearSearch">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if selectedMediaIds is not empty %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-1"></i>
+                                {{ selectedMediaIds|length }} media file(s) currently selected
+                            </div>
+                        {% endif %}
+
+                        <!-- Media Table -->
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th width="60px">Select</th>
+                                        <th width="100px">Preview</th>
+                                        <th>File Name</th>
+                                        <th width="120px">Type</th>
+                                        <th width="100px">Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for media in this.mediaList %}
+                                        <tr class="{% if this.isMediaSelected(media.id) %}table-success{% endif %}">
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           data-live-ignore
+                                                           data-action="live#action"
+                                                           data-live-action-param="toggleMedia"
+                                                           data-live-media-id-param="{{ media.id }}"
+                                                           name="input_media_{{ zone }}-{{ media.id }}"
+                                                           data-input-media-{{ zone }}-id="{{ media.id }}"
+                                                           {% if this.isMediaSelected(media.id) %}checked{% endif %}
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                {% if media %}
+                                                    {{ media_macro.display_media(media, 'avatar') }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <strong>{{ media.originalName }}</strong>
+                                            </td>
+                                            <td>
+                                                {% if media.mimeType starts with 'image/' %}
+                                                    <span class="badge bg-primary text-white">
+                                                        <i class="fas fa-image me-1"></i>
+                                                        Image
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-file me-1"></i>
+                                                        Document
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if media.size %}
+                                                    {{ (media.size / 1024)|round(1) }} KB
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                <div class="py-4">
+                                                    <i class="fas fa-images fa-3x text-muted mb-3"></i>
+                                                    <p class="mb-0">No media files available</p>
+                                                    <button type="button" class="btn btn-primary mt-2">
+                                                        <i class="fas fa-plus me-1"></i>
+                                                        Upload Media
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if this.totalPages > 1 %}
+                            <nav aria-label="Media pagination">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Previous button -->
+                                    <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                                        <button class="page-link"
+                                                data-action="live#action"
+                                                data-live-action-param="previousPage"
+                                                type="button"
+                                                {% if currentPage == 1 %}disabled{% endif %}>
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                    </li>
+
+                                    <!-- Page numbers -->
+                                    {% for page in 1..this.totalPages %}
+                                        {% if page == currentPage %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ page }}</span>
+                                            </li>
+                                        {% elseif page <= currentPage + 2 and page >= currentPage - 2 %}
+                                            <li class="page-item">
+                                                <button class="page-link"
+                                                        type="button"
+                                                        data-action="live#action"
+                                                        data-live-action-param="goToPage"
+                                                        data-live-page-param="{{ page }}"
+                                                >
+                                                    {{ page }}
+                                                </button>
+                                            </li>
+                                        {% elseif page == 1 or page == this.totalPages %}
+                                            <li class="page-item">
+                                                <button class="page-link"
+                                                        type="button"
+                                                        data-action="live#action"
+                                                        data-live-action-param="goToPage"
+                                                        data-live-page-param="{{ page }}"
+                                                >
+                                                    {{ page }}
+                                                </button>
+                                            </li>
+                                        {% elseif (page == currentPage - 3 and page > 1) or (page == currentPage + 3 and page < this.totalPages) %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <!-- Next button -->
+                                    <li class="page-item {% if currentPage == this.totalPages %}disabled{% endif %}">
+                                        <button class="page-link"
+                                                type="button"
+                                                data-action="live#action"
+                                                data-live-action-param="nextPage"
+                                                {% if currentPage == this.totalPages %}disabled{% endif %}>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+
+                            <!-- Pagination info -->
+                            <div class="text-center text-muted">
+                                <small>
+                                    Page {{ currentPage }} of {{ this.totalPages }}
+                                    ({{ this.totalMedia }} total files, {{ itemsPerPage }} per page)
+                                </small>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-action="live#action"
+                                data-live-action-param="closeModal">
+                            Cancel
+                        </button>
+                        <button type="button"
+                                class="btn btn-primary"
+                                data-action="live#action"
+                                data-live-action-param="closeModal">
+                            <i class="fas fa-check me-1"></i>
+                            Confirm Selection ({{ selectedMediaIds|length }})
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Listen for media selection changes
+            document.addEventListener('media:selection-changed-{{ zone }}', function(event) {
+                document.querySelectorAll('input[type="checkbox"][data-input-media-{{ zone }}-id]').forEach(checkbox => {
+                    const mediaId = parseInt(checkbox.getAttribute('data-input-media-{{ zone }}-id'));
+                    checkbox.checked = event.detail.selectedIds.includes(mediaId);
+                });
+
+                const hiddenInput = document.querySelector('[data-zone="{{ zone }}"]');
+                if (hiddenInput) {
+                    hiddenInput.value = JSON.stringify(event.detail.selectedIds);
+                }
+            });
+        });
+    </script>
+</div>
+

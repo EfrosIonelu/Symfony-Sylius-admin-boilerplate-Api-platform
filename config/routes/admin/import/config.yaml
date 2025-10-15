@@ -1,0 +1,8 @@
+app_backend_config_import:
+    path: /{resource}
+    methods: [GET]
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        template: 'admin/grid/importer/create.html.twig'
+        fields: !php/const App\Exporter\HeadersConstants::CONFIG
+        index_route: app_admin_config_index

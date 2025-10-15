@@ -1,0 +1,30 @@
+{% set generic_hook = 'sylius_admin.base' %}
+
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{% block title %}{% apply striptags %}{% hook generic_hook ~ '#base_title' %}{% endapply %}{% endblock %}</title>
+
+    {% block metatags %}{% endblock %}
+    {% block stylesheets %}
+        {% hook generic_hook ~ '#stylesheets' %}
+
+        <link href="/css/custom_export.css" rel="stylesheet"/>
+    {% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<div class="page">
+    {% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}
+    <div class="modal-space"></div>
+    <script type="text/javascript" src="/js/custom_export.js"></script>
+    {% hook generic_hook ~ '#javascripts' %}
+{% endblock %}
+</body>
+</html>

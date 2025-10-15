@@ -1,0 +1,16 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\MessageHandler\:
+        resource: '../../src/MessageHandler'
+
+    App\MessageHandler\Config\ConfigImportMessageHandler:
+        arguments:
+            $objectManager: '@doctrine.orm.entity_manager'
+            $resourceProcessor: '@App\Importer\Config\ConfigProcessor'
+
+    App\MessageHandler\ExportFile\ExportFileMessageHandler:
+        arguments:
+            $serviceRegistry: "@sylius.exporters_registry"

@@ -1,0 +1,114 @@
+{# Main Collection Widget for fields #}
+{% block _app_custom_form_fields_widget %}
+    {% set prototype = form_widget(form.vars.prototype) %}
+    <div id="custom-form-fields-collection" class="fields-collection" data-prototype="{{ prototype|e('html_attr') }}">
+        {% for field_form in form %}
+            {{ form_widget(field_form) }}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{# Custom Form Field Widget #}
+{% block app_custom_form_field_widget %}
+    <div class="custom-form-field-widget border rounded p-3 mb-3">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <button type="button" class="btn btn-danger btn-sm remove-field" data-field-index="{{ form.vars.name }}">
+                <i class="fas fa-trash"></i>
+                {{ 'app.ui.remove'|trans }}
+            </button>
+        </div>
+
+        <!-- Translations for field -->
+        {% if form.translations is defined %}
+            <div class="mt-3">
+                <div class="accordion" id="fieldTranslationAccordion-{{ form.vars.name }}">
+                    {% for locale, translation_form in form.translations %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="fieldHeading-{{ form.vars.name }}-{{ locale }}">
+                                <button class="accordion-button {% if not loop.first %}collapsed{% endif %}"
+                                        type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#fieldCollapse-{{ form.vars.name }}-{{ locale }}"
+                                        aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                                        aria-controls="fieldCollapse-{{ form.vars.name }}-{{ locale }}">
+                                    <i class="fas fa-language me-2"></i>
+                                    {{ locale|upper }} - {{ 'app.ui.label'|trans }}
+                                </button>
+                            </h2>
+                            <div id="fieldCollapse-{{ form.vars.name }}-{{ locale }}"
+                                 class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                                 aria-labelledby="fieldHeading-{{ form.vars.name }}-{{ locale }}"
+                                 data-bs-parent="#fieldTranslationAccordion-{{ form.vars.name }}">
+                                <div class="accordion-body">
+                                    {{ form_row(translation_form.label) }}
+                                    {{ form_rest(translation_form) }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row mt-3">
+            <div class="col-md-6">
+                {{ form_row(form.fieldType) }}
+                {{ form_row(form.order) }}
+                {{ form_row(form.allowedValues) }}
+{#                {{ dump(form.allowedValues.vars.block_prefixes) }}#}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.required) }}
+                {{ form_row(form.attributes) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+    </div>
+{% endblock %}
+
+{# Custom Collection Widget for allowedValues #}
+{% block _app_custom_form_fields_entry_allowedValues_widget %}
+    {% set prototype = form_widget(form.vars.prototype) %}
+    <div class="collection-container" data-prototype="{{ prototype|e('html_attr') }}">
+        <div class="collection-items">
+            {% for field_form in form %}
+                {{ form_widget(field_form) }}
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-sm mt-2 add-collection-item">
+            {{ 'app.ui.add_option'|trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _app_custom_form_fields_entry_allowedValues_entry_widget %}
+    <div class="collection-item d-flex align-items-center mb-2">
+        <div class="flex-grow-1">
+            {{ form_widget(form, {
+                'attr': {
+                    'class': 'form-control',
+                    'placeholder': 'app.ui.option_value'|trans
+                }
+            }) }}
+        </div>
+        <button type="button" class="btn btn-danger btn-sm ms-2 remove-collection-item">
+            {{ ux_icon('material-symbols:close') }}
+        </button>
+    </div>
+{% endblock %}
+
+{# Attributes widget with JSON validation #}
+{% block _app_custom_form_fields_entry_atributes_widget %}
+    {% set attr = attr|merge({
+        'class': (attr.class|default('') ~ ' form-control json-field')|trim,
+        'rows': attr.rows|default(5),
+        'placeholder': attr.placeholder|default('app.ui.attributes_placeholder_json'|trans)
+    }) %}
+
+    <div class="json-field-container">
+        {{ block('textarea_widget') }}
+        <small class="form-text text-muted">{{ 'app.ui.attributes_help_json'|trans }}</small>
+        <div class="json-validation-error text-danger d-none"></div>
+    </div>
+{% endblock %}

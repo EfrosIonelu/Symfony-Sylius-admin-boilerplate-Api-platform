@@ -1,0 +1,10 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.custom.index.content.grid':
+            data_table:
+                template: 'shared/crud/index/content/grid/data_table.html.twig'
+                priority: 100
+        'sylius_admin.common.component.sidebar':
+            logo:
+                template: 'admin/common/logo.html.twig'
+                priority: 100

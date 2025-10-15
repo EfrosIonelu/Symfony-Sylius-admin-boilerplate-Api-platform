@@ -1,0 +1,13 @@
+parameters:
+    root_administrator_email: ""
+
+odiseo_sylius_rbac:
+    sylius_sections:
+        configuration:
+            - app_backend_dashboard
+    custom_sections:
+        app_rbac:
+            - sylius_rbac_admin_administration_role_index
+        app_config:
+            - app_admin_config_index
+            - app_admin_media_index

@@ -1,0 +1,20 @@
+# Default one
+#app_export_data_config:
+#    path: /app.config/{format}
+#    methods: [GET]
+#    defaults:
+#        resource: app.config
+#        _controller: app.controller.export_data_config::exportAction
+#        _sylius:
+#            filterable: true
+#            grid: app_config
+
+app_export_data_config:
+    path: /app.config/{format}
+    methods: [GET]
+    defaults:
+        resource: app.config
+        _controller: App\Controller\Backend\CustomExportController::exportAction
+        _sylius:
+            filterable: true
+            grid: app_config

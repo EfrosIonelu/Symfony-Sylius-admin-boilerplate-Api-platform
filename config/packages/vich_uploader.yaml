@@ -1,0 +1,22 @@
+vich_uploader:
+    db_driver: orm
+    storage: gaufrette
+    twig: true
+    metadata:
+        type: attribute
+    mappings:
+        media_files:
+            uri_prefix: /system
+            upload_destination: media_fs
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: true
+        image_files:
+            uri_prefix: /image
+            upload_destination: media_fs
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: true
+        document_files:
+            uri_prefix: /documents
+            upload_destination: media_fs
+            namer: vich_uploader.namer_uniqid
+            inject_on_load: true

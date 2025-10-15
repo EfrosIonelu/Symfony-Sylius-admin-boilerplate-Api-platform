@@ -1,0 +1,69 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: false
+
+    app.controller.export_data_config:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            $registry: "@sylius.exporters_registry"
+            $requestConfigurationFactory: "@sylius.resource_controller.request_configuration_factory"
+            $resourcesCollectionProvider: "@sylius.resource_controller.resources_collection_provider"
+            $repository: "@app.repository.config"
+            $resources: "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    app.exporter.orm.hydrator.config:
+        class: App\Exporter\ORM\Hydrator\EmptyHydrator
+        arguments:
+            $repository: "@app.repository.config"
+
+    app.exporter.plugin.resource.config:
+        class: App\Exporter\Plugin\ConfigResourcePlugin
+        arguments:
+            $repository: "@app.repository.config"
+            $propertyAccessor: "@property_accessor"
+            $entityManager: "@doctrine.orm.entity_manager"
+            $entityHydrator: "@app.exporter.orm.hydrator.config"
+
+    app.exporter.pluginpool.config:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@app.exporter.plugin.resource.config"]
+            - !php/const App\Exporter\HeadersConstants::CONFIG
+
+    app.exporter.config.csv:
+        class: App\Exporter\Resource\AsyncResourceExporter
+        arguments:
+            - "@sylius.exporter.csv_writer"
+            - "@app.exporter.pluginpool.config"
+            - !php/const App\Exporter\HeadersConstants::CONFIG
+            - "@sylius.exporters_transformer_pool"
+            - "@app.repository.config"
+        tags:
+            - { name: sylius.exporter, type: app.config, format: csv }
+
+    app.exporter.config.xlsx:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+        arguments:
+            - "@sylius.exporter.spreadsheet_writer"
+            - "@app.exporter.pluginpool.config"
+            - !php/const App\Exporter\HeadersConstants::CONFIG
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: app.config, format: xlsx }
+
+#    app.listener.config:
+#        class: FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener
+#        arguments:
+#            - app.config
+#            -   - csv
+#                - xlsx
+#        calls:
+#            -   setRequest:
+#                    - '@request_stack'
+#        tags:
+#            -   name: kernel.event_listener
+#                event: sylius.grid.app_config
+#                method: onSyliusGridAdmin

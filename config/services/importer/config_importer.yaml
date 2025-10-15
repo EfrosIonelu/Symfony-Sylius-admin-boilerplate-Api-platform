@@ -1,0 +1,37 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Importer\Config\ConfigProcessor:
+        arguments:
+            $resourceFactory: "@app.factory.config"
+            $resourceRepository: "@app.repository.config"
+            $entityManager: "@doctrine.orm.entity_manager"
+            $metadataValidator: "@sylius.importer.metadata_validator"
+            $headerKeys: !php/const App\Exporter\HeadersConstants::CONFIG
+
+    app.importer.config.csv:
+        class: App\Importer\Config\ConfigImporter
+        arguments:
+            $readerFactory: "@sylius.factory.csv_reader"
+            $importerResult: "@sylius.importer.result"
+        tags:
+            - { name: sylius.importer, type: app.config, format: csv }
+
+    app.importer.config.xlsx:
+        class: App\Importer\Config\ConfigImporter
+        arguments:
+            $readerFactory: "@sylius.factory.spreadsheet_reader"
+            $importerResult: "@sylius.importer.result"
+        tags:
+            - { name: sylius.importer, type: app.config, format: xlsx }
+
+    app.listener.config_importer:
+        class: App\EventListener\Sylius\ImportButtonGridListener
+        arguments:
+            - app.config
+        tags:
+            -   name: kernel.event_listener
+                event: sylius.grid.app_config
+                method: onSyliusGridAdmin

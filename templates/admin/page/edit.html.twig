@@ -1,0 +1,136 @@
+{% set form = hookable_metadata.context.form %}
+
+{% form_theme form '@SyliusBootstrapAdminUi/shared/form_theme.html.twig' %}
+
+<div class="container-xl mt-3">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <div id="side-nav" class="sticky-md-top" style="top: 1rem;">
+                <div class="list-group bg-white mb-5" role="tablist">
+                    <button type="button" class="list-group-item list-group-item-action active" data-bs-toggle="tab"
+                            data-bs-target="#general" role="tab" aria-selected="true">
+                        {{ 'app.ui.general'|trans }}
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action " data-bs-toggle="tab"
+                            data-bs-target="#translations" role="tab" aria-selected="false" tabindex="-1">
+                        {{ 'app.ui.translations'|trans }}
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action " data-bs-toggle="tab"
+                            data-bs-target="#media" role="tab" aria-selected="false" tabindex="-1">
+                        {{ 'app.ui.media'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <div class="tab-content" id="translationTabsContent">
+                <!-- General Tab -->
+                <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-cog me-2"></i>
+                                {{ 'app.ui.general_information'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {{ form_row(form.enabled, {
+                                'label': 'app.ui.enabled'|trans,
+                                'attr': {
+                                    'class': 'form-check-input',
+                                }
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Translations Tab -->
+                <div class="tab-pane fade" id="translations" role="tabpanel" aria-labelledby="translations-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-language me-2"></i>
+                                {{ 'app.ui.translations'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Accordion for each language -->
+                            <div class="accordion" id="languageAccordion">
+                                {% for locale, translation_form in form.translations %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading-{{ locale }}">
+                                            <button class="accordion-button {% if not loop.first %}collapsed{% endif %}"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ locale }}"
+                                                    aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                                                    aria-controls="collapse-{{ locale }}">
+                                                <i class="fas fa-language me-2"></i>
+                                                {{ locale|upper }}
+                                            </button>
+                                        </h2>
+                                        <div id="collapse-{{ locale }}"
+                                             class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                                             aria-labelledby="heading-{{ locale }}" data-bs-parent="#languageAccordion">
+                                            <div class="accordion-body">
+                                                {{ form_row(translation_form.name, {
+                                                    'label': ('app.ui.name'|trans) ~ ' (' ~ (locale|upper) ~ ')',
+                                                    'attr': {
+                                                        'class': 'form-control',
+                                                        'placeholder': ('app.ui.enter_page_name'|trans) ~ ' ' ~ (locale|upper)
+                                                    }
+                                                }) }}
+
+                                                {{ form_row(translation_form.content, {
+                                                    'label': ('app.ui.content'|trans) ~ ' (' ~ (locale|upper) ~ ')',
+                                                    'attr': {
+                                                        'placeholder': ('app.ui.add_page_content'|trans)
+                                                    }
+                                                }) }}
+
+                                                <!-- Hidden locale field -->
+                                                {{ form_rest(translation_form) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Tab -->
+                <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-images me-2"></i>
+                                {{ 'app.ui.media'|trans }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Hidden input for selected media IDs -->
+                            {{ form_widget(form.files) }}
+
+                            <!-- Media Selection Component -->
+                            {{ component('MediaSelection:MediaSelectionComponent', {
+                                zone: 'main',
+                                multiple: false,
+                                initialSelectedMediaIds: form.files.main.vars.value ? form.files.main.vars.value : '[]'
+                            }) }}
+
+                            <!-- Media Selection Component -->
+                            {{ component('MediaSelection:MediaSelectionComponent', {
+                                zone: 'slider',
+                                multiple: true,
+                                initialSelectedMediaIds: form.files.slider.vars.value ? form.files.slider.vars.value : '[]'
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form) }}
+        {{ form_end(form, {render_rest: hookable_metadata.configuration.render_rest|default(false)}) }}
+    </div>
+</div>

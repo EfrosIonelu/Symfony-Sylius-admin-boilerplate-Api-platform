@@ -1,0 +1,9 @@
+stof_doctrine_extensions:
+    default_locale: en
+    orm:
+        default:
+            timestampable: true
+            blameable: true
+            loggable: true
+            softdeleteable: true
+            sluggable: true

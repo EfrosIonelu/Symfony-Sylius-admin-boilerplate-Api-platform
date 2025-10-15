@@ -1,0 +1,51 @@
+{% import '@SyliusBootstrapAdminUi/shared/helper/table.html.twig' as table %}
+{% import 'shared/crud/index/content/grid/macro/live_pagination.html.twig' as live_pagination %}
+{% import 'shared/crud/index/content/grid/macro/live_table_headers.html.twig' as live_headers %}
+
+<div {{ attributes }}>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2>{{ 'app.ui.estimated_imbalance_prices' | trans }}</h2>
+        </div>
+        <div class="col-12">
+            {% set resources = gridView %}
+            {% set data = resources.data %}
+            {% set definition = resources.definition %}
+
+            {% if data|length > 0 %}
+                <div class="card">
+                    <div class="card-body border-bottom py-3">
+                        <div class="d-flex">
+                            <div class="ms-auto">
+                                {{ live_pagination.number_of_results_selector(data, definition.limits) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table card-table table-vcenter datatable" {{ sylius_test_html_attribute('grid-table') }}>
+                            <thead>
+                            <tr>
+                                {{ live_headers.headers(resources, resources.definition, this) }}
+                            </tr>
+                            </thead>
+                            <tbody {{ sylius_test_html_attribute('grid-table-body') }}>
+                            {% for row in resources.data %}
+                                {{ table.row(resources, resources.definition, row) }}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer d-flex align-items-center">
+                        <div class="text-muted">
+                            {{ live_pagination.results_count(data) }}
+                        </div>
+                        <div class="ms-auto">
+                            {{ live_pagination.simple(data, 'EstimatedImbalancePricesComponent') }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

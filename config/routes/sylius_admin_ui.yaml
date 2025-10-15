@@ -1,0 +1,10 @@
+sylius_admin_ui:
+    resource: '@SyliusAdminUiBundle/config/routes.php'
+    prefix: "/%app_admin.path_name%"
+
+app_admin_admin:
+    path: /admin
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        path: "/%app_admin.path_name%"
+        permanent: false

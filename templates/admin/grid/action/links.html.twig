@@ -1,0 +1,15 @@
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-download"></i> {{ action.label|trans }}
+    </button>
+    <ul class="dropdown-menu">
+        {% for export in action.options.links %}
+            <li>
+                <a class="dropdown-item" href="{{ path(export.route, export.parameters) }}">
+                    <i class="fas fa-file-{% if export.parameters.format == 'csv' %}csv{% elseif export.parameters.format == 'excel' or export.parameters.format == 'xlsx' %}excel{% else %}alt{% endif %}"></i>
+                   {{ export.label | trans }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

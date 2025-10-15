@@ -1,0 +1,4 @@
+app_import_config:
+    resource: "config.yaml"
+    prefix: /config
+

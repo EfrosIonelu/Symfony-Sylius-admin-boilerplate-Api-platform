@@ -1,0 +1,14 @@
+twig:
+    file_name_pattern: '*.twig'
+    paths:
+        '%kernel.project_dir%/vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/templates': SyliusAdmin
+        '%kernel.project_dir%/templates/bundles/SyliusAdminUi/templates/': SyliusAdminUi
+        '%kernel.project_dir%//templates/bundles/SyliusGrid': SyliusGrid
+    globals:
+        sylius_base_locale: "%locale%"
+        sylius:
+            localeCode: 'en'
+
+when@test:
+    twig:
+        strict_variables: true

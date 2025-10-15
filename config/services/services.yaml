@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Services\:
+        resource: '../../src/Services'
+
+    App\Services\FilterService:
+        arguments:
+            $filters: !tagged_iterator sylius.grid_filter

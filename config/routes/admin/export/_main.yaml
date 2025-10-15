@@ -1,0 +1,7 @@
+app_export_data_config_index:
+    resource: "config.yaml"
+    prefix: /config
+
+app_custom_export_index:
+    resource: "custom_export.yaml"
+    prefix: /custom_export

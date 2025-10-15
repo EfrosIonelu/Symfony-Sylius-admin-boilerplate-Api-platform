@@ -1,0 +1,24 @@
+sylius_fixtures:
+    suites:
+        add_user:
+            listeners:
+                orm_purger: false
+                logger: ~
+            fixtures:
+                user_user:
+                    name: "user_user"
+                    options:
+                        custom:
+                            -
+                                email: "%env(SUPER_ADMIN_EMAIL)%"
+                                password: "%env(SUPER_ADMIN_PASSWORD)%"
+                                enabled: true
+                                first_name: "Admin"
+                                last_name: "User"
+                                role: 'ROLE_ADMIN'
+                            -   email: "%env(SIMPLE_USER_ADMIN_EMAIL)%"
+                                password: "%env(SIMPLE_USER_ADMIN_PASSWORD)%"
+                                enabled: true
+                                first_name: "Test"
+                                last_name: "User"
+                                role: 'ROLE_USER'

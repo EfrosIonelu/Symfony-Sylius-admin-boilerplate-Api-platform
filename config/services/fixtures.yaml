@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Fixture\AppUserFixture:
+        arguments:
+            $exampleFactory: '@App\Factory\AppUserFactory'
+            $objectManager: '@doctrine.orm.entity_manager'
+
+    App\Fixture\LanguageFixture:
+        arguments:
+            $exampleFactory: '@App\Factory\LanguageFactory'
+            $objectManager: '@doctrine.orm.entity_manager'
+
+    App\Fixture\TranslationFixture:
+        arguments:
+            $exampleFactory: '@App\Factory\TranslationFactory'
+            $objectManager: '@doctrine.orm.entity_manager'

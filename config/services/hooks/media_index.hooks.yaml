@@ -1,0 +1,5 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.media.index.content.header.title_block':
+            actions:
+                template: '/admin/media/index/actions.html.twig'

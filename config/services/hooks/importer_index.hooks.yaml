@@ -1,0 +1,22 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.importer.index.content.header':
+            breadcrumbs:
+                template: 'admin/grid/importer/_breadcrumb.html.twig'
+                priority: 100
+        'sylius_admin.importer.index.content.header.title_block':
+            default:
+                enabled: false
+            title:
+                template: 'admin/grid/importer/_title.html.twig'
+                priority: 100
+            actions:
+                template: 'admin/grid/importer/_no_content.html.twig'
+                priority: 100
+        'sylius_admin.importer.index.content.grid':
+            filters:
+                template: 'admin/grid/importer/_no_content.html.twig'
+            no_data_block:
+                template: 'admin/grid/importer/_no_content.html.twig'
+            data_table:
+                template: 'admin/grid/importer/_body.html.twig'

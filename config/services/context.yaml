@@ -1,0 +1,11 @@
+services:
+    app.context.locale:
+        class: App\Context\LocaleContext
+        arguments:
+            $requestStack: '@request_stack'
+            $localeProvider: '@app.provider.locale'
+        tags:
+            - { name: sylius.context.locale}
+
+    # Alias for autowiring
+    Sylius\Component\Locale\Context\LocaleContextInterface: '@app.context.locale'

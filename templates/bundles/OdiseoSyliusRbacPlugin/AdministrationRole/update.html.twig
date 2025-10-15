@@ -1,0 +1,27 @@
+{% extends '@SyliusAdminUi/base.html.twig' %}
+
+{% set prefixes = [
+    'sylius_admin.%resource_name%'|replace({'%resource_name%': resource_name|default('rbac')}),
+    'sylius_admin.common'
+] %}
+
+
+{% block body %}
+    {% hook ['sylius_admin.rbac.update', 'sylius_admin.common.update'] with {
+        resource: administration_role,
+        permissions: permissions,
+        rolePermissions: rolePermissions,
+        title: 'sylius_rbac.ui.edit_administration_role'|trans,
+        back_url: path('sylius_rbac_admin_administration_role_index')
+    } %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% hook 'update#stylesheets' with { _prefixes: prefixes } %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% hook 'update#javascripts' with { _prefixes: prefixes } %}
+{% endblock %}

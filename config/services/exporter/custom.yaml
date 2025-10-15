@@ -1,0 +1,25 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+
+    App\Exporter\Custom\ExporterGridProvider:
+        arguments:
+            $arrayGridProvider: '@sylius.grid.array_grid_provider'
+            $serviceGridProvider: '@sylius.grid.service_grid_provider'
+
+    app.default_resource_exporter.csv:
+        class: App\Exporter\Custom\AsyncResourceManagerExporter
+        tags: [ 'app.custom_export' ]
+        arguments:
+            $filtersApplicator: '@sylius.grid.filters_applicator'
+
+    App\Exporter\Custom\ExporterFactory:
+        arguments:
+            $exporters: !tagged_iterator app.custom_export
+
+#    Add possibility to add custom exporters
+#    app.example.csv:
+#        class: App\Exporter\Custom\ExampleExporter
+#        tags: [ 'app.custom_export' ]
+

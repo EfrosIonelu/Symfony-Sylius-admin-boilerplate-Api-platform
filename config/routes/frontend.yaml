@@ -1,0 +1,5 @@
+app_frontend:
+    prefix: /
+    resource: './frontend/_main.yaml'
+    options:
+        expose: true

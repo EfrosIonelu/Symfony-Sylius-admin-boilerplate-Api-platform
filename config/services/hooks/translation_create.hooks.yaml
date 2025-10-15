@@ -1,0 +1,7 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.translation.create.content':
+            form:
+                template: '/admin/translation/edit.html.twig'
+                priority: 0
+

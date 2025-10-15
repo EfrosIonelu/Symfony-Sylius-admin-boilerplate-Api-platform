@@ -1,0 +1,6 @@
+app_page:
+    resource: "page.yaml"
+    prefix: /page
+
+app_custom_form:
+    resource: "custom_form.yaml"

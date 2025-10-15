@@ -1,0 +1,14 @@
+{% macro display_media(media, type = 'avatar', width, height) %}
+    {% if media %}
+        {% if media.type == 'image' %}
+            {{ media(media, "file", {width: width, height: height}, type) }}
+        {% else %}
+            {% if media.extension == 'pdf' %}
+                <img src="{{ asset('/assets/images/picture_as_pdf.svg') }}" alt="pdf" />
+            {% else %}
+                {{ ux_icon('material-symbols:docs') }}
+            {% endif %}
+
+        {% endif %}
+    {% endif %}
+{% endmacro %}

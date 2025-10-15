@@ -1,0 +1,8 @@
+{% set path = options.url|default(path(options.route, options.parameters|default({}))) %}
+
+<a href="{{ path }}" class="btn btn">
+    <span class="px-2">{{ action.label | trans }}</span>
+    {% if action.icon is defined %}
+        {{ ux_icon(options.icon) }}
+    {% endif %}
+</a>

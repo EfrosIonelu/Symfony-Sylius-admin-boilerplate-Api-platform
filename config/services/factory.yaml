@@ -1,0 +1,21 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    sylius_rbac.factory.administration_role:
+        class: App\Factory\RbacFactory
+
+    sylius.factory.avatar_image:
+        class: App\Factory\AvatarImageFactory
+        public: true
+
+    App\Factory\AppUserFactory:
+        arguments:
+            $appUserFactory: '@sylius.factory.admin_user'
+            $appCustomerFactory: '@sylius.factory.customer'
+
+    App\Factory\LanguageFactory: ~
+
+    App\Factory\TranslationFactory: ~

@@ -1,0 +1,13 @@
+{% set index_route = hookable_metadata.context.index_route %}
+{% set resource = hookable_metadata.context.resource %}
+<ol class="breadcrumb" aria-label="breadcrumbs">
+    <li class="breadcrumb-item ">
+        <a href="{{ path('sylius_admin_ui_dashboard') }}" class="section">{{ 'sylius.ui.administration'|trans }}</a>
+    </li>
+    <li class="breadcrumb-item ">
+        <a href="{{ path(index_route) }}" class="section">{{ (resource~'.index')|trans }}</a>
+    </li>
+    <li class="breadcrumb-item ">
+        {{ 'app.ui.import' | trans }}
+    </li>
+</ol>

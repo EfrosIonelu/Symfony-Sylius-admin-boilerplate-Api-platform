@@ -1,0 +1,9 @@
+services:
+    app.provider.locale:
+        class: App\Component\Locale\LocaleProvider
+
+    MonsieurBiz\SyliusRichEditorPlugin\Twig\Components\UiElementForm:
+        autowire: true
+        autoconfigure: false
+        tags:
+            - { name: 'twig.component', key: 'SyliusAdmin:MonsieurBizUiElement:Form', template: '@MonsieurBizSyliusRichEditorPlugin/admin/form_container.html.twig' }

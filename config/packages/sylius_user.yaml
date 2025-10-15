@@ -1,0 +1,16 @@
+sylius_user:
+    resources:
+        user:
+            user:
+                classes:
+                    model: App\Entity\User\AppUser
+        admin:
+            user:
+                classes:
+                    model: App\Entity\User\AppUser
+
+sylius_customer:
+    resources:
+        customer:
+            classes:
+                model: App\Entity\User\AppCustomer

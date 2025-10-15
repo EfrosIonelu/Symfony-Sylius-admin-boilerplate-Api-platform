@@ -1,0 +1,30 @@
+{% set fields = hookable_metadata.context.fields %}
+{% set resource = hookable_metadata.context.resource %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <b>General info</b>:
+        <ol>
+            <li>If an XLS file is uploaded, please make sure you upload a file without formulas. These may cause
+                issues
+            </li>
+            <li>If there is an issue with dropping formulas, please export the file into CSV format - the formula
+                result
+                will be exported
+            </li>
+        </ol>
+        <b>Required Fields</b>:
+        <ul>
+            <li>{{ "\"" ~ fields | join ("\", \"") ~ "\"" }}</li>
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {{ render(controller(
+            'sylius.controller.import_data::importFormAction',
+            {'resource': resource }
+        )) }}
+    </div>
+</div>

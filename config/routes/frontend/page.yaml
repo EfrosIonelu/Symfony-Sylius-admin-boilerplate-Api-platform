@@ -1,0 +1,11 @@
+app_frontend_page_show:
+    path: /{slug}
+    defaults:
+        _controller: app.controller.page::showAction
+        _sylius:
+            section: frontend
+            template: frontend/page/show.html.twig
+            repository:
+                method: findOneBySlug
+                arguments:
+                    - $slug

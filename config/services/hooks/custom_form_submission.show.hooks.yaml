@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.custom_form_submission.show.content':
+            form:
+                template: '/admin/custom_form_submission/show.html.twig'
+                priority: 0

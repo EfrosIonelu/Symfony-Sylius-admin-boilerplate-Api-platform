@@ -1,0 +1,11 @@
+knp_gaufrette:
+    stream_wrapper: ~
+
+    adapters:
+        media_adapter:
+            local:
+                directory: "%kernel.project_dir%/public/media/system"
+                create: true
+    filesystems:
+        media_fs:
+            adapter: media_adapter

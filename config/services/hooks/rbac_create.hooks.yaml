@@ -1,0 +1,23 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.rbac.create.content.header':
+            breadcrumbs:
+                template: '@OdiseoSyliusRbacPlugin/AdministrationRole/Create/_breadcrumb.html.twig'
+                priority: 100
+        'sylius_admin.rbac.create.content.header.title_block':
+            default:
+                enabled: false
+            title:
+                template: '@OdiseoSyliusRbacPlugin/AdministrationRole/Create/_title.html.twig'
+                priority: 100
+        'sylius_admin.rbac.create.content.header.title_block.actions':
+            cancel:
+                template: '@OdiseoSyliusRbacPlugin/AdministrationRole/Create/_cancel.html.twig'
+                priority: 100
+            create:
+                template: '@OdiseoSyliusRbacPlugin/AdministrationRole/Create/_create.html.twig'
+                priority: 100
+        'sylius_admin.rbac.create.content':
+            form:
+                template: '@OdiseoSyliusRbacPlugin/AdministrationRole/Create/_form.html.twig'
+                priority: 0

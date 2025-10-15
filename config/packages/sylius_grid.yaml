@@ -1,0 +1,10 @@
+sylius_grid:
+    templates:
+        action:
+            export: "admin/grid/action/export.html.twig"
+            links: "admin/grid/action/links.html.twig"
+            import: "admin/grid/action/import.html.twig"
+            custom_export: "admin/grid/action/custom_export.html.twig"
+        filter:
+            numeric: 'admin/grid/filter/numeric.html.twig'
+            custom_form_submission_type: 'admin/grid/filter/autocomplete.html.twig'

@@ -1,0 +1,26 @@
+{% extends '@SyliusAdminUi/base.html.twig' %}
+
+{% set prefixes = [
+    'sylius_admin.%resource_name%'|replace({'%resource_name%': resource_name|default('rbac')}),
+    'sylius_admin.common'
+] %}
+
+{% set resource = app.request.get('resource') %}
+
+{% block body %}
+    {% hook ['sylius_admin.importer.index', 'sylius_admin.common.index'] with {
+        fields: app.request.attributes.get('fields'),
+        index_route: app.request.attributes.get('index_route'),
+        resource: resource
+    } %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% hook 'update#stylesheets' with { _prefixes: prefixes } %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% hook 'update#javascripts' with { _prefixes: prefixes } %}
+{% endblock %}
