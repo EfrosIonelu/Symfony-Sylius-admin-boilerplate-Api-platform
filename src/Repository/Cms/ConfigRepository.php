@@ -3,7 +3,6 @@
 namespace App\Repository\Cms;
 
 use App\Entity\Cms\Config;
-use App\Exporter\Resource\Interfaces\GetLastIdsInterface;
 use App\Repository\Shared\MainRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -13,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Config[]    findAll()
  * @method Config[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ConfigRepository extends MainRepository implements GetLastIdsInterface
+class ConfigRepository extends MainRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

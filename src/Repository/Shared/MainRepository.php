@@ -2,13 +2,14 @@
 
 namespace App\Repository\Shared;
 
+use App\Exporter\Resource\Interfaces\GetLastIdsInterface;
 use App\Repository\Traits\LastIdsTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\ResourceRepositoryTrait;
 use Sylius\Resource\Doctrine\Persistence\RepositoryInterface;
 
-abstract class MainRepository extends ServiceEntityRepository implements RepositoryInterface
+abstract class MainRepository extends ServiceEntityRepository implements RepositoryInterface, GetLastIdsInterface
 {
     use ResourceRepositoryTrait;
     use LastIdsTrait;
