@@ -14,7 +14,7 @@ app_export_data_config:
     methods: [GET]
     defaults:
         resource: app.config
-        _controller: App\Controller\Backend\CustomExportController::exportAction
+        _controller: App\Controller\Admin\CustomExportController::exportAction
         _sylius:
             filterable: true
             grid: app_config

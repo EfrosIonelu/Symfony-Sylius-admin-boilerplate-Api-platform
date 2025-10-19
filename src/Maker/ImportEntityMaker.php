@@ -181,7 +181,7 @@ class ImportEntityMaker extends AbstractMaker
         $upperName = strtoupper($name);
 
         $routeContent = [
-            sprintf('app_backend_%s_import', $name) => [
+            sprintf('app_admin_%s_import', $name) => [
                 'path' => '/{resource}',
                 'methods' => ['GET'],
                 'controller' => 'Symfony\Bundle\FrameworkBundle\Controller\TemplateController',

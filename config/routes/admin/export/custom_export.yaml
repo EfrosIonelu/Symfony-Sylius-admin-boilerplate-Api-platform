@@ -2,7 +2,7 @@ app_custom_export_data_resource_index:
     path: /resource/{format}
     methods: [GET]
     defaults:
-        _controller: App\Controller\Backend\CustomExportController::exportAction
+        _controller: App\Controller\Admin\CustomExportController::exportAction
         _sylius:
             filterable: true
 
@@ -10,10 +10,10 @@ app_custom_export_data_status_index:
     path: /status
     methods: [GET]
     defaults:
-        _controller: App\Controller\Backend\CustomExportController::statusAction
+        _controller: App\Controller\Admin\CustomExportController::statusAction
 
 app_custom_export_data_file_index:
     path: /file
     methods: [GET]
     defaults:
-        _controller: App\Controller\Backend\CustomExportController::getFileAction
+        _controller: App\Controller\Admin\CustomExportController::getFileAction

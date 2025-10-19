@@ -1,4 +1,4 @@
-app_backend_config_import:
+app_admin_config_import:
     path: /{resource}
     methods: [GET]
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController

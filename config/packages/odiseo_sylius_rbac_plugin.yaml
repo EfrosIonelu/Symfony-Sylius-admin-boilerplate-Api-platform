@@ -4,7 +4,7 @@ parameters:
 odiseo_sylius_rbac:
     sylius_sections:
         configuration:
-            - app_backend_dashboard
+            - app_admin_dashboard
     custom_sections:
         app_rbac:
             - sylius_rbac_admin_administration_role_index

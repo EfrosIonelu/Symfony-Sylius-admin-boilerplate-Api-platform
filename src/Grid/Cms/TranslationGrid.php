@@ -3,6 +3,7 @@
 namespace App\Grid\Cms;
 
 use App\Entity\Cms\Translation;
+use App\Grid\Action\CustomExportAction;
 use Sylius\Bundle\GridBundle\Builder\Action\CreateAction;
 use Sylius\Bundle\GridBundle\Builder\Action\DeleteAction;
 use Sylius\Bundle\GridBundle\Builder\Action\ShowAction;
@@ -33,6 +34,7 @@ final class TranslationGrid extends AbstractGrid implements ResourceAwareGridInt
             ->addActionGroup(
                 MainActionGroup::create(
                     CreateAction::create(),
+                    CustomExportAction::create('app_export_data_translation')
                 )
             )
             ->addActionGroup(

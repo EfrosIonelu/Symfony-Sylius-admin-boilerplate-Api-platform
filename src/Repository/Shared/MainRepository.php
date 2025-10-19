@@ -2,6 +2,7 @@
 
 namespace App\Repository\Shared;
 
+use App\Repository\Traits\LastIdsTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\ResourceRepositoryTrait;
@@ -10,6 +11,7 @@ use Sylius\Resource\Doctrine\Persistence\RepositoryInterface;
 abstract class MainRepository extends ServiceEntityRepository implements RepositoryInterface
 {
     use ResourceRepositoryTrait;
+    use LastIdsTrait;
 
     public function __construct(ManagerRegistry $registry, string $entityClass)
     {

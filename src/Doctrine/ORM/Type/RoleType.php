@@ -7,7 +7,7 @@ class RoleType extends EnumType
     // frontend dashboard
     final public const ROLE_USER = 'ROLE_USER';
 
-    // backend dashboard
+    // Admin dashboard
     final public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     // organization api endpoints

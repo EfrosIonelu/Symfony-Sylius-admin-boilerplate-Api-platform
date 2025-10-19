@@ -5,7 +5,6 @@ namespace App\Repository\Cms;
 use App\Entity\Cms\Config;
 use App\Exporter\Resource\Interfaces\GetLastIdsInterface;
 use App\Repository\Shared\MainRepository;
-use App\Repository\Traits\LastIdsTrait;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,8 +15,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ConfigRepository extends MainRepository implements GetLastIdsInterface
 {
-    use LastIdsTrait;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Config::class);

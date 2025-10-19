@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Backend;
+namespace App\Controller\Admin;
 
 use App\Entity\CustomForm\CustomFormField;
 use App\Entity\CustomForm\CustomFormSubmission;

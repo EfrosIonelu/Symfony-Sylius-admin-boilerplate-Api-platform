@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Backend;
+namespace App\Controller\Admin;
 
 use App\Entity\Log\ExportFileLog;
 use App\Message\ExportFile\ExportFileMessage;

@@ -35,7 +35,7 @@ final class ImportButtonGridListener
         $action->setLabel('app.ui.import');
         $action->setOptions([
             'icon' => 'material-symbols:upload',
-            'route' => sprintf('app_backend_%s_import', $resource),
+            'route' => sprintf('app_admin_%s_import', $resource),
             'parameters' => [
                 'resource' => $this->resource,
             ],

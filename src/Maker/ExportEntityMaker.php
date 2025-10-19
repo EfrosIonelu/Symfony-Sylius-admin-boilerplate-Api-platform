@@ -42,6 +42,7 @@ class ExportEntityMaker extends AbstractMaker
     {
         $command
             ->addArgument('name', InputArgument::REQUIRED, 'Entity name (e.g., customer)')
+            ->addArgument('sync', InputArgument::OPTIONAL, 'async or sync')
             ->setHelp('This command creates export configuration files for an entity');
 
         $inputConfig->setArgumentAsNonInteractive('name');
@@ -50,6 +51,7 @@ class ExportEntityMaker extends AbstractMaker
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         $name = $input->getArgument('name');
+        $sync = 'async' !== $input->getArgument('sync');
         $entityClassName = $this->findEntityClassByResourceName($name);
 
         if (null === $entityClassName) {
@@ -79,13 +81,13 @@ class ExportEntityMaker extends AbstractMaker
         $this->createOrUpdateHeadersConstants($name, $properties, $io);
 
         // Create export route file
-        $this->createExportRouteFile($name, $gridData['name'], $io);
+        $this->createExportRouteFile($name, $gridData['name'], $io, $sync);
 
         // Update main export routes file
         $this->updateMainExportRoutesFile($name, $io);
 
         // Create services configuration
-        $this->createServicesConfiguration($name, $io);
+        $this->createServicesConfiguration($name, $io, $sync);
 
         // Create ResourcePlugin class
         $this->createResourcePlugin($name, $entityClassName, $properties, $io, $generator);
@@ -98,9 +100,14 @@ class ExportEntityMaker extends AbstractMaker
         // No additional dependencies needed
     }
 
-    private function createExportRouteFile(string $name, string $gridName, ConsoleStyle $io): void
+    private function createExportRouteFile(string $name, string $gridName, ConsoleStyle $io, bool $sync): void
     {
         $routePath = sprintf('config/routes/admin/export/%s.yaml', $name);
+
+        $exportController = sprintf('app.controller.export_data_%s::exportAction', $name);
+        if (!$sync) {
+            $exportController = 'App\Controller\Admin\CustomExportController::exportAction';
+        }
 
         $routeContent = [
             sprintf('app_export_data_%s', $name) => [
@@ -108,7 +115,7 @@ class ExportEntityMaker extends AbstractMaker
                 'methods' => ['GET'],
                 'defaults' => [
                     'resource' => sprintf('app.%s', $name),
-                    '_controller' => sprintf('app.controller.export_data_%s::exportAction', $name),
+                    '_controller' => $exportController,
                     '_sylius' => [
                         'filterable' => true,
                         'grid' => $gridName,
@@ -155,11 +162,39 @@ class ExportEntityMaker extends AbstractMaker
         }
     }
 
-    private function createServicesConfiguration(string $name, ConsoleStyle $io): void
+    private function createServicesConfiguration(string $name, ConsoleStyle $io, bool $sync): void
     {
         $servicePath = sprintf('config/services/exporter/%s_exporter.yaml', $name);
         $className = $this->convertToClassName($name);
         $upperClassName = strtoupper($name);
+
+        $csv = [
+            'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Exporter\\ResourceExporter',
+            'arguments' => [
+                '@sylius.exporter.csv_writer',
+                sprintf('@app.exporter.pluginpool.%s', $name),
+                new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
+                '@sylius.exporters_transformer_pool',
+            ],
+            'tags' => [
+                ['name' => 'sylius.exporter', 'type' => sprintf('app.%s', $name), 'format' => 'csv'],
+            ],
+        ];
+        if (!$sync) {
+            $csv = [
+                'class' => 'App\\Exporter\\Resource\\AsyncResourceExporter',
+                'arguments' => [
+                    '@sylius.exporter.csv_writer',
+                    sprintf('@app.exporter.pluginpool.%s', $name),
+                    new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
+                    '@sylius.exporters_transformer_pool',
+                    sprintf('@app.repository.%s', $name),
+                ],
+                'tags' => [
+                    ['name' => 'sylius.exporter', 'type' => sprintf('app.%s', $name), 'format' => 'csv'],
+                ],
+            ];
+        }
 
         $serviceContent = [
             'services' => [
@@ -201,45 +236,40 @@ class ExportEntityMaker extends AbstractMaker
                         new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
                     ],
                 ],
-                sprintf('app.exporter.%s.csv', $name) => [
-                    'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Exporter\\ResourceExporter',
-                    'arguments' => [
-                        '@sylius.exporter.csv_writer',
-                        sprintf('@app.exporter.pluginpool.%s', $name),
-                        new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
-                        '@sylius.exporters_transformer_pool',
-                    ],
-                    'tags' => [
-                        ['name' => 'sylius.exporter', 'type' => sprintf('app.%s', $name), 'format' => 'csv'],
-                    ],
-                ],
-                sprintf('app.exporter.%s.xlsx', $name) => [
-                    'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Exporter\\ResourceExporter',
-                    'arguments' => [
-                        '@sylius.exporter.spreadsheet_writer',
-                        sprintf('@app.exporter.pluginpool.%s', $name),
-                        new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
-                        '@sylius.exporters_transformer_pool',
-                    ],
-                    'tags' => [
-                        ['name' => 'sylius.exporter', 'type' => sprintf('app.%s', $name), 'format' => 'xlsx'],
-                    ],
-                ],
-                sprintf('app.listener.%s', $name) => [
-                    'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Listener\\ExportButtonGridListener',
-                    'arguments' => [
-                        sprintf('app.%s', $name),
-                        ['csv', 'xlsx'],
-                    ],
-                    'calls' => [
-                        ['setRequest' => ['@request_stack']],
-                    ],
-                    'tags' => [
-                        ['name' => 'kernel.event_listener', 'event' => sprintf('sylius.grid.%s', $name), 'method' => 'onSyliusGridAdmin'],
-                    ],
-                ],
+                sprintf('app.exporter.%s.csv', $name) => $csv,
             ],
         ];
+
+        if ($sync) {
+            $serviceContent['services'][sprintf('app.exporter.%s.xlsx', $name)] = [
+                'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Exporter\\ResourceExporter',
+                'arguments' => [
+                    '@sylius.exporter.spreadsheet_writer',
+                    sprintf('@app.exporter.pluginpool.%s', $name),
+                    new TaggedValue('php/const', sprintf('App\\Exporter\\HeadersConstants::%s', $upperClassName)),
+                    '@sylius.exporters_transformer_pool',
+                ],
+                'tags' => [
+                    ['name' => 'sylius.exporter', 'type' => sprintf('app.%s', $name), 'format' => 'xlsx'],
+                ],
+            ];
+        }
+
+        if ($sync) {
+            $serviceContent['services'][sprintf('app.listener.%s', $name)] = [
+                'class' => 'FriendsOfSylius\\SyliusImportExportPlugin\\Listener\\ExportButtonGridListener',
+                'arguments' => [
+                    sprintf('app.%s', $name),
+                    ['csv', 'xlsx'],
+                ],
+                'calls' => [
+                    ['setRequest' => ['@request_stack']],
+                ],
+                'tags' => [
+                    ['name' => 'kernel.event_listener', 'event' => sprintf('sylius.grid.%s', $name), 'method' => 'onSyliusGridAdmin'],
+                ],
+            ];
+        }
 
         $yamlContent = Yaml::dump($serviceContent, 6, 4);
 
@@ -367,7 +397,10 @@ class ExportEntityMaker extends AbstractMaker
         $getterCalls = [];
 
         foreach ($properties as $property) {
-            $getterMethod = 'get'.ucfirst($property);
+            // Convert property name to camelCase for getter method
+            // "exemplu_unu" or "exemplu unu" -> "getExempluUnu"
+            $camelCaseProperty = $this->convertToCamelCase($property);
+            $getterMethod = 'get'.ucfirst($camelCaseProperty);
             $getterCalls[] = sprintf(
                 "        \$this->addDataForResource(\$resource, '%s', \$resource->%s());",
                 $property,
@@ -376,6 +409,20 @@ class ExportEntityMaker extends AbstractMaker
         }
 
         return implode("\n", $getterCalls);
+    }
+
+    private function convertToCamelCase(string $property): string
+    {
+        // Replace underscores and spaces with nothing, and capitalize the first letter of each word
+        // "exemplu_unu" -> "exempluUnu", "exemplu unu" -> "exempluUnu"
+        $words = preg_split('/[_\s]+/', $property);
+        $camelCase = array_shift($words); // Keep first word as is
+
+        foreach ($words as $word) {
+            $camelCase .= ucfirst($word);
+        }
+
+        return $camelCase;
     }
 
     private function findEntityClassByResourceName(string $resourceName): ?string
