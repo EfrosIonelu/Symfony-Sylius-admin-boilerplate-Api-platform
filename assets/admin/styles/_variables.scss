@@ -1,0 +1,338 @@
+/*!
+ * This file is part of the Sylius package.
+ *
+ * (c) Sylius Sp. z o.o.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+//$prefix: "tblr-";
+//
+//$assets-base: "/node_modules/@tabler/core/dist";
+//$primary: #22B99A;
+//
+//$white:    #fff !default;
+//$gray-100: #f8f9fa !default;
+//$gray-200: #e9ecef !default;
+//$gray-300: #dee2e6 !default;
+//$gray-400: #ced4da !default;
+//$gray-500: #adb5bd !default;
+//$gray-600: #6c757d !default;
+//$gray-700: #495057 !default;
+//$gray-800: #343a40 !default;
+//$gray-900: #212529 !default;
+//$black:    #000 !default;
+//
+//$grid-breakpoints: (
+//        xs: 0,
+//        sm: 768px,
+//        md: 992px,
+//        lg: 1200px,
+//        xl: 1400px,
+//        xxl: 2200px
+//);
+//
+//$container-max-widths: (
+//        sm: 720px,
+//        md: 960px,
+//        lg: 1140px,
+//        xl: 1320px,
+//        xxl: 1920px
+//);
+//
+//$body-color: $gray-900;
+//
+//$text-secondary: $gray-600;
+//$text-secondary-light: $gray-500;
+//$text-secondary-dark: $gray-700;
+//
+//$link-color: $body-color;
+//$link-decoration: underline;
+//$link-hover-color: $primary;
+//$link-hover-decoration: null;
+//
+//$disabled-color: $gray-600;
+//$form-secondary-color: $gray-600;
+//
+//$input-border-color: $gray-400;
+//$input-border-color-translucent: $gray-400;
+//$input-focus-border-color: $gray-600;
+//
+//$focus-ring-width: 0;
+//$focus-ring-color: $input-focus-border-color;
+//$focus-ring-blur: 0;
+//$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+//
+//$input-btn-focus-width: $focus-ring-width;
+//
+//$btn-border-color: $input-border-color;
+//
+//$pagination-active-color: inherit;
+//$pagination-active-bg: $gray-200;
+//
+//$font-family-sans-serif: 'Inter', serif;
+//
+//$h1-font-size: 1.6rem;
+//$h1-line-height: 2.1rem;
+//
+//// Page
+//$page-title-font-size: var(--#{$prefix}font-size-h1);
+$prefix: "tblr-";
+
+$assets-base: "/node_modules/@tabler/core/dist";
+
+// Original colors (Sylius default)
+//$primary: #22B99A;
+//$white:    #fff !default;
+//$gray-100: #f8f9fa !default;
+//$gray-200: #e9ecef !default;
+//$gray-300: #dee2e6 !default;
+//$gray-400: #ced4da !default;
+//$gray-500: #adb5bd !default;
+//$gray-600: #6c757d !default;
+//$gray-700: #495057 !default;
+//$gray-800: #343a40 !default;
+//$gray-900: #212529 !default;
+//$black:    #000 !default;
+
+// ============================================
+// BASE COLOR PALETTE (4 colors only)
+// ============================================
+$color1: #000000; // main
+$color2: #EAE4D5; // secondary
+$color3: #000000; // tertiary
+$color4: #F9F3EF; // quaternary
+
+//$color5: #FFF1AF; // navigation
+//$color6: #FFC286; // navigation active
+//$color7: #66806A;
+$color5: #F2F2F2; // navigation
+$color6: #B6B09F; // navigation active
+$color7: #021526;
+
+
+
+// ============================================
+// DERIVED COLORS (only from 4 base colors)
+// ============================================
+
+// White & Black - derived from palette
+// White & Black - derived from palette
+$white: mix($color4, #ffffff, 3%) !default;           // Subtle sage-white
+$black: mix($color3, #000000, 18%) !default;          // Deep blue-black
+
+// Gray scale - intelligent mix of all 4 colors for neutral tones
+$gray-100: mix($color4, mix($color2, $white, 6%), 55%) !default;    // Very light: sage + hint of coral
+$gray-200: mix($color4, mix($color3, $white, 18%), 65%) !default;   // Light: sage-blue blend
+$gray-300: mix($color4, mix($color3, $white, 28%), 70%) !default;   // Medium-light
+$gray-400: mix($color3, mix($color4, $white, 42%), 65%) !default;   // Medium: blue-sage
+$gray-500: mix($color3, mix($color4, $black, 35%), 70%) !default;   // Medium-dark
+$gray-600: mix($color3, mix($color1, $black, 52%), 65%) !default;   // Dark: blue-teal
+$gray-700: mix($color3, mix($color1, $black, 68%), 72%) !default;   // Very dark
+$gray-800: mix($color3, $black, 88%) !default;                       // Nearly black
+$gray-900: mix($color3, $black, 94%) !default;                       // Almost black
+
+// ============================================
+// SEMANTIC COLORS (Bootstrap/Tabler compatible)
+// ============================================
+$primary: $color1 !default;                           // Teal
+$secondary: $color3 !default;                         // Blue-gray
+$success: mix($color1, $color4, 65%) !default;        // Teal-sage for success
+$info: $color3 !default;                              // Blue-gray
+$warning: $color2 !default;                           // Coral
+$danger: mix($color2, darken($color2, 20%), 60%) !default;  // Deeper coral-red
+$light: $gray-100 !default;
+$dark: $gray-900 !default;
+
+$grid-breakpoints: (
+        xs: 0,
+        sm: 768px,
+        md: 992px,
+        lg: 1200px,
+        xl: 1400px,
+        xxl: 2200px
+);
+
+$container-max-widths: (
+        sm: 720px,
+        md: 960px,
+        lg: 1140px,
+        xl: 1320px,
+        xxl: 1920px
+);
+
+// ============================================
+// TEXT & TYPOGRAPHY
+// ============================================
+$body-color: $gray-900;
+$body-bg: $white;
+
+$text-muted: $gray-600;
+$text-secondary: $gray-600;
+$text-secondary-light: $gray-500;
+$text-secondary-dark: $gray-700;
+
+$headings-color: $gray-900;
+
+// ============================================
+// LINKS
+// ============================================
+$link-color: $primary;
+$link-decoration: none;
+$link-hover-color: mix($color1, $color3, 70%);        // Teal-blue mix on hover
+$link-hover-decoration: underline;
+
+// ============================================
+// BORDERS & DIVIDERS
+// ============================================
+$border-color: $gray-300;
+$border-color-translucent: rgba($gray-400, 0.5);
+
+// ============================================
+// BACKGROUNDS
+// ============================================
+$body-bg: mix($color4, $white, 8%);                    // Subtle sage background
+$body-secondary-bg: $gray-100;
+$body-tertiary-bg: mix($color4, $white, 15%);
+
+// ============================================
+// COMPONENT COLORS
+// ============================================
+$component-active-bg: $primary;
+$component-active-color: $white;
+
+// Disabled states
+$disabled-color: $gray-600;
+$form-secondary-color: $gray-600;
+
+// ============================================
+// FORMS & INPUTS
+// ============================================
+$input-bg: $white;
+$input-color: $gray-900;
+$input-border-color: $gray-400;
+$input-border-color-translucent: rgba($gray-400, 0.6);
+$input-focus-border-color: mix($color1, $color3, 60%);
+$input-focus-bg: $white;
+$input-focus-color: $gray-900;
+$input-placeholder-color: $gray-500;
+$input-disabled-bg: $gray-200;
+$input-disabled-border-color: $gray-300;
+
+// Focus ring
+$focus-ring-width: 0;
+$focus-ring-color: rgba($primary, 0.25);
+$focus-ring-blur: 0;
+$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+
+$input-btn-focus-width: $focus-ring-width;
+$input-btn-focus-color: $focus-ring-color;
+
+// ============================================
+// BUTTONS
+// ============================================
+$btn-border-color: $input-border-color;
+$btn-hover-bg-shade-amount: 15%;
+$btn-hover-bg-tint-amount: 15%;
+$btn-active-bg-shade-amount: 20%;
+$btn-active-bg-tint-amount: 20%;
+
+// ============================================
+// TABLES
+// ============================================
+$table-bg: transparent;
+$table-accent-bg: rgba($color4, 0.08);                 // Subtle sage tint
+$table-hover-bg: rgba($color1, 0.075);                 // Teal tint on hover
+$table-border-color: $gray-300;
+$table-striped-bg: rgba($color4, 0.05);
+
+// ============================================
+// PAGINATION
+// ============================================
+$pagination-color: $gray-700;
+$pagination-bg: $white;
+$pagination-border-color: $gray-300;
+$pagination-hover-color: $primary;
+$pagination-hover-bg: $gray-100;
+$pagination-hover-border-color: $gray-300;
+$pagination-active-color: $white;
+$pagination-active-bg: $primary;
+$pagination-active-border-color: $primary;
+$pagination-disabled-color: $gray-500;
+$pagination-disabled-bg: $white;
+$pagination-disabled-border-color: $gray-300;
+
+// ============================================
+// CARDS
+// ============================================
+$card-bg: $white;
+$card-border-color: $gray-300;
+$card-cap-bg: rgba($color4, 0.05);
+
+// ============================================
+// ALERTS
+// ============================================
+$alert-bg-scale: -80%;
+$alert-border-scale: -70%;
+$alert-color-scale: 40%;
+
+// ============================================
+// MODALS
+// ============================================
+$modal-content-bg: $white;
+$modal-content-border-color: $gray-300;
+$modal-backdrop-bg: $gray-900;
+$modal-backdrop-opacity: 0.5;
+$modal-header-border-color: $border-color;
+
+// ============================================
+// DROPDOWNS
+// ============================================
+$dropdown-bg: $white;
+$dropdown-border-color: $gray-300;
+$dropdown-link-color: $gray-900;
+$dropdown-link-hover-color: $gray-900;
+$dropdown-link-hover-bg: rgba($color1, 0.1);           // Teal tint
+$dropdown-link-active-color: $white;
+$dropdown-link-active-bg: $primary;
+
+// ============================================
+// NAVBAR & NAVIGATION
+// ============================================
+$navbar-light-color: $gray-700;
+$navbar-light-hover-color: $primary;
+$navbar-light-active-color: $primary;
+$navbar-light-brand-color: $gray-900;
+
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
+$navbar-dark-active-color: $white;
+
+$nav-link-color: $gray-700;
+$nav-link-hover-color: $primary;
+
+// ============================================
+// BADGES
+// ============================================
+$badge-color: $white;
+
+// ============================================
+// TYPOGRAPHY
+// ============================================
+$font-family-sans-serif: 'Inter', serif;
+
+$h1-font-size: 1.6rem;
+$h1-line-height: 2.1rem;
+
+// ============================================
+// CUSTOM ADMIN VARIABLES
+// ============================================
+$page-title-font-size: var(--#{$prefix}font-size-h1);
+
+// Sidebar colors
+$sidebar-bg: mix($color3, $gray-900, 15%);             // Dark blue-gray
+$sidebar-color: rgba($white, 0.85);
+$sidebar-link-hover-bg: rgba($color1, 0.15);           // Teal overlay
+$sidebar-link-active-bg: rgba($color1, 0.25);
+$sidebar-link-active-color: $white;

@@ -21,6 +21,8 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('admin', './assets/admin/entrypoint.js')
+    .addEntry('admin_ux', './assets/admin/symfony_ux.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
@@ -41,6 +43,18 @@ Encore
      */
     .cleanupOutputBeforeBuild()
 
+    // Copy FontAwesome fonts
+    .copyFiles({
+        from: './node_modules/@fortawesome/fontawesome-free/webfonts/',
+        to: 'fonts/[name].[hash].[ext]'
+    })
+
+    // Copy admin images
+    .copyFiles({
+        from: './assets/admin/images',
+        to: 'images/[path][name].[ext]',
+    })
+
     // Displays build status system notifications to the user
     // .enableBuildNotifications()
 
@@ -60,7 +74,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
@@ -73,7 +87,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

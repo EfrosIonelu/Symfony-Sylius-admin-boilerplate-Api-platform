@@ -1,0 +1,9 @@
+table{
+  thead{
+    th {
+      &.text-body{
+        color: color-mix(in srgb, transparent, var(--tblr-link-color) var(--tblr-link-opacity, 100%))!important;
+      }
+    }
+  }
+}

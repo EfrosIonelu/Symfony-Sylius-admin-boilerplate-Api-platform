@@ -1,5 +1,17 @@
 sylius_twig_hooks:
     hooks:
+        sylius_admin.base#stylesheets:
+            styles:
+                template: 'admin/common/admin_stylesheets.html.twig'
+                priority: 100
+            symfony_ux:
+                enabled: false
+        sylius_admin.base#javascripts:
+            javascripts:
+                template: 'admin/common/admin_javascript.html.twig'
+                priority: 100
+            symfony_ux:
+                enabled: false
         'sylius_admin.custom.index.content.grid':
             data_table:
                 template: 'shared/crud/index/content/grid/data_table.html.twig'
